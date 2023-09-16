@@ -21,12 +21,15 @@ getFilesToBackup(lastBackup, changes) // => [ 1, 3 ]
 
 // Hay una validación que tiene que ver en como funciona el metodo sort
 
-function getFilesToBackup(lastBackup, changes) {
+export default function getFilesToBackup(lastBackup, changes) {
+  if (typeof lastBackup !== "number" || !Array.isArray(changes))
+    throw new Error("parameters must be provided")
 
   const changesFiles = changes
     .flatMap((file) => {
-      return file[1] > lastBackup ? file[0] : []
-    }).sort((a, b) => a - b)
+      return file[1] > lastBackup ? file[0] : [];
+    })
+    .sort((a, b) => a - b);
 
-  return [...new Set(changesFiles)]
+  return [...new Set(changesFiles)];
 }
