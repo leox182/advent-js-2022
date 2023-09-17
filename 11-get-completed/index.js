@@ -15,17 +15,22 @@ getCompleted('01:10:10', '03:30:30') // '1/3'
 getCompleted('03:30:30', '05:50:50') // '3/5
 */
 
-function getCompleted(part, total) {
-  const partArray = part.split(":").map((item, index) => {
-    const operador = index === 0 ? 3600 : index === 1 ? 60 : 0;
-    return Number(item) * operador;
-  });
-  const totalArray = total.split(":").map((item, index) => {
-    const operador = index === 0 ? 3600 : index === 1 ? 60 : 0;
-    return Number(item) * operador;
-  });
+export default function getCompleted(part, total) {
+  const validation = /^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/;
+  if (!validation.test(part) || !validation.test(total)) 
+    throw new Error("parameters should be provided in valid 'hh:mm:ss' format");
   
-  function calMCD(a, b) {
+
+  const partArray = part.split(":").map(Number)
+  const totalArray = total.split(":").map(Number)
+
+  const partTime = partArray[0] * 3600 + partArray[1] * 60 + partArray[2];
+  const totalTime = totalArray[0] * 3600 + totalArray[1] * 60 + totalArray[2];
+
+  if (partTime <= 0 || totalTime <= 0)
+    throw new Error("parameters should be greater than '0'")
+  
+  const calMCD = (a, b) => {
     while (b !== 0) {
       const temp = b;
       b = a % b;
